@@ -1,5 +1,6 @@
 package com.example.api_call.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -28,6 +29,7 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
         )
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VerifyInfoHolder, position: Int) {
         val pageData = pageDataList?.get(position)
         if (pageData != null) {
