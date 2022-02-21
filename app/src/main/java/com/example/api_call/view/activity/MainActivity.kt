@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setListener()
     }
+
     private fun setListener() {
         btnSimpleApiFetching.setOnClickListener {
             val intentSimpleApiCall=Intent(this, ApiCallSimpleActivity::class.java)

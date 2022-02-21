@@ -13,6 +13,8 @@ import com.example.api_call.view.activity.ApiCallSimpleActivity
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 import kotlinx.android.synthetic.main.item_page.view.*
+import java.text.ParseException
+import java.text.SimpleDateFormat
 
 
 class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayList<PageModel>?) :
@@ -29,11 +31,25 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
         )
     }
 
-    @SuppressLint("SetTextI18n")
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    @SuppressLint("SetTextI18n", "SimpleDateFormat", "NotifyDataSetChanged")
     override fun onBindViewHolder(holder: VerifyInfoHolder, position: Int) {
         val pageData = pageDataList?.get(position)
         if (pageData != null) {
-            holder.tvCratedDate.text = "Created At:"+" "+pageData.created_at
+            val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+            try {
+                val date = dateFormat.parse(pageData.created_at)
+                holder.tvCratedDate.text = "Created At: $date"
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
             holder.tvTitle.text = "Title:"+" "+pageData.title
             holder.tvUrl.text = pageData.url
             val mActionBar = (ctx as AppCompatActivity).supportActionBar
@@ -42,15 +58,15 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
                 if (isChecked) {
                     ApiCallSimpleActivity.selectedCount+=1
                     mActionBar?.title =ApiCallSimpleActivity.selectedCount.toString()
-
+                    notifyDataSetChanged()
                 } else {
                    ApiCallSimpleActivity.selectedCount-=1
                     mActionBar?.title =ApiCallSimpleActivity.selectedCount.toString()
+                    notifyDataSetChanged()
                 }
             }
 
         }
-
     }
 
     override fun getItemCount(): Int {

@@ -1,6 +1,10 @@
 package com.example.api_call.view.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.ActionBar
@@ -19,10 +23,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiCallSimpleActivity : AppCompatActivity() {
-  companion object{
-      var selectedCount=0
-  }
-
+    companion object {
+        var selectedCount = 0
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +33,8 @@ class ApiCallSimpleActivity : AppCompatActivity() {
         setTextChangeListener()
         val actionBar: ActionBar? = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
-        actionBar?.title=""
+        actionBar?.title = ""
     }
-
 
     private fun setTextChangeListener() {
         tetPageNumber.addTextChangedListener {
@@ -47,13 +49,35 @@ class ApiCallSimpleActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setButtonListener() {
         btnFetchData.setOnClickListener {
+            if(checkForInternet(this)){
             getPageData()
+            }
+            else{
+                swipeRefreshPageData.visibility = View.GONE
+                tvError.visibility = View.VISIBLE
+                tvError.text = "Oops ! No Internet Please Turn on Internet  For Fetch Data"
+            }
+        }
+        swipeRefreshPageData.setOnRefreshListener {
+            swipeRefreshPageData.visibility=View.GONE
+            if(checkForInternet(this)){
+                getPageData()
+                swipeRefreshPageData.isRefreshing=false
+            }
+            else{
+                swipeRefreshPageData.visibility = View.GONE
+                tvError.visibility = View.VISIBLE
+                tvError.text = "Oops ! No Internet Please Turn on Internet  For Fetch Data"
+            }
         }
     }
 
     private fun getPageData() {
+        tvError.visibility = View.GONE
+        pbWaiting.visibility=View.VISIBLE
         val retrofitBuilder = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://hn.algolia.com/api/v1/")
@@ -63,25 +87,53 @@ class ApiCallSimpleActivity : AppCompatActivity() {
         pageData.enqueue(object : Callback<PageList?> {
             @SuppressLint("NotifyDataSetChanged")
             override fun onResponse(call: Call<PageList?>, response: Response<PageList?>) {
-
                 val pageBody = response.body()
-                tvError.visibility=View.GONE
-                rvPageData.visibility=View.VISIBLE
-                val pageInfoAdapter = PageInfoAdapter(this@ApiCallSimpleActivity, pageBody!!.pageList)
-                rvPageData.layoutManager = LinearLayoutManager(this@ApiCallSimpleActivity)
-                pageInfoAdapter.notifyDataSetChanged()
-                rvPageData.adapter = pageInfoAdapter
-                selectedCount=0
-
+                if(pageBody?.pageList?.isEmpty() == true){
+                    swipeRefreshPageData.visibility = View.GONE
+                    pbWaiting.visibility=View.GONE
+                    tvError.visibility = View.VISIBLE
+                    selectedCount = 0
+                    tvError.text ="Page is Empty"
+                }else {
+                    pbWaiting.visibility=View.GONE
+                    tvError.visibility = View.GONE
+                    swipeRefreshPageData.visibility = View.VISIBLE
+                    val pageInfoAdapter = PageInfoAdapter(this@ApiCallSimpleActivity, pageBody!!.pageList)
+                    pageInfoAdapter.setHasStableIds(true)
+                    rvPageData.layoutManager = LinearLayoutManager(this@ApiCallSimpleActivity)
+                    pageInfoAdapter.notifyDataSetChanged()
+                    rvPageData.adapter = pageInfoAdapter
+                    selectedCount = 0
+                }
             }
 
             override fun onFailure(call: Call<PageList?>, t: Throwable) {
-                rvPageData.visibility=View.GONE
-                tvError.visibility=View.VISIBLE
-                tvError.text=t.message.toString()
-
+                pbWaiting.visibility=View.GONE
+                swipeRefreshPageData.visibility = View.GONE
+                tvError.visibility = View.VISIBLE
+                tvError.text = t.message.toString()
             }
         })
+    }
+
+
+    private fun checkForInternet(context: Context): Boolean {
+
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return when {
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                else -> false
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+            @Suppress("DEPRECATION")
+            return networkInfo.isConnected
+        }
     }
 }
 
