@@ -12,4 +12,6 @@
     <string name="permission_dialog_negative_button">No</string>
     <string name="permission_dialog_message_for_page_details">For get Page Data require to Internet permission,For give permission click \"Yes\"</string>
     <string name="error">Error</string>
+    <string name="page_empty">Page is Empty</string>
+    <string name="no_internet_error">Oops ! No Internet Please Turn on Internet  For Fetch Data</string>
 </resources>

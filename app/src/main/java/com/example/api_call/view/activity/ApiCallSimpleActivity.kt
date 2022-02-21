@@ -49,35 +49,32 @@ class ApiCallSimpleActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun setButtonListener() {
         btnFetchData.setOnClickListener {
-            if(checkForInternet(this)){
-            getPageData()
-            }
-            else{
+            if (checkForInternet(this)) {
+                getPageData()
+            } else {
                 swipeRefreshPageData.visibility = View.GONE
                 tvError.visibility = View.VISIBLE
-                tvError.text = "Oops ! No Internet Please Turn on Internet  For Fetch Data"
+                tvError.text = getString(R.string.no_internet_error)
             }
         }
         swipeRefreshPageData.setOnRefreshListener {
-            swipeRefreshPageData.visibility=View.GONE
-            if(checkForInternet(this)){
+            swipeRefreshPageData.visibility = View.GONE
+            if (checkForInternet(this)) {
                 getPageData()
-                swipeRefreshPageData.isRefreshing=false
-            }
-            else{
+                swipeRefreshPageData.isRefreshing = false
+            } else {
                 swipeRefreshPageData.visibility = View.GONE
                 tvError.visibility = View.VISIBLE
-                tvError.text = "Oops ! No Internet Please Turn on Internet  For Fetch Data"
+                tvError.text = getString(R.string.no_internet_error)
             }
         }
     }
 
     private fun getPageData() {
         tvError.visibility = View.GONE
-        pbWaiting.visibility=View.VISIBLE
+        pbWaiting.visibility = View.VISIBLE
         val retrofitBuilder = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://hn.algolia.com/api/v1/")
@@ -88,17 +85,18 @@ class ApiCallSimpleActivity : AppCompatActivity() {
             @SuppressLint("NotifyDataSetChanged")
             override fun onResponse(call: Call<PageList?>, response: Response<PageList?>) {
                 val pageBody = response.body()
-                if(pageBody?.pageList?.isEmpty() == true){
+                if (pageBody?.pageList?.isEmpty() == true) {
                     swipeRefreshPageData.visibility = View.GONE
-                    pbWaiting.visibility=View.GONE
+                    pbWaiting.visibility = View.GONE
                     tvError.visibility = View.VISIBLE
                     selectedCount = 0
-                    tvError.text ="Page is Empty"
-                }else {
-                    pbWaiting.visibility=View.GONE
+                    tvError.text = getString(R.string.page_empty)
+                } else {
+                    pbWaiting.visibility = View.GONE
                     tvError.visibility = View.GONE
                     swipeRefreshPageData.visibility = View.VISIBLE
-                    val pageInfoAdapter = PageInfoAdapter(this@ApiCallSimpleActivity, pageBody!!.pageList)
+                    val pageInfoAdapter =
+                        PageInfoAdapter(this@ApiCallSimpleActivity, pageBody!!.pageList)
                     pageInfoAdapter.setHasStableIds(true)
                     rvPageData.layoutManager = LinearLayoutManager(this@ApiCallSimpleActivity)
                     pageInfoAdapter.notifyDataSetChanged()
@@ -108,7 +106,7 @@ class ApiCallSimpleActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<PageList?>, t: Throwable) {
-                pbWaiting.visibility=View.GONE
+                pbWaiting.visibility = View.GONE
                 swipeRefreshPageData.visibility = View.GONE
                 tvError.visibility = View.VISIBLE
                 tvError.text = t.message.toString()
@@ -119,7 +117,8 @@ class ApiCallSimpleActivity : AppCompatActivity() {
 
     private fun checkForInternet(context: Context): Boolean {
 
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val network = connectivityManager.activeNetwork ?: return false
             val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false

@@ -50,18 +50,18 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
             } catch (e: ParseException) {
                 e.printStackTrace()
             }
-            holder.tvTitle.text = "Title:"+" "+pageData.title
+            holder.tvTitle.text = "Title:" + " " + pageData.title
             holder.tvUrl.text = pageData.url
             val mActionBar = (ctx as AppCompatActivity).supportActionBar
-            mActionBar?.title =ApiCallSimpleActivity.selectedCount.toString()
+            mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
             holder.switchSelect.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    ApiCallSimpleActivity.selectedCount+=1
-                    mActionBar?.title =ApiCallSimpleActivity.selectedCount.toString()
+                    ApiCallSimpleActivity.selectedCount += 1
+                    mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
                     notifyDataSetChanged()
                 } else {
-                   ApiCallSimpleActivity.selectedCount-=1
-                    mActionBar?.title =ApiCallSimpleActivity.selectedCount.toString()
+                    ApiCallSimpleActivity.selectedCount -= 1
+                    mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
                     notifyDataSetChanged()
                 }
             }
