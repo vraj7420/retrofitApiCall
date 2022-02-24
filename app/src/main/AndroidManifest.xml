@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Api_Call">
         <activity
-            android:name=".view.activity.ApiCallWithPagination"
+            android:name=".view.activity.ApiCallWithPaginationActivity"
             android:exported="false" />
         <activity
             android:name=".view.activity.ApiCallSimpleActivity"

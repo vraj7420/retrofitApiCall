@@ -17,12 +17,12 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 
 
-class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayList<PageModel>?) :
-    RecyclerView.Adapter<PageInfoAdapter.PageInfoHolder>() {
+class PageInfoWithPaginationAdapter(private var ctx: Context, private var pageDataList: ArrayList<PageModel>?) :
+    RecyclerView.Adapter<PageInfoWithPaginationAdapter.PageInfoWithPaginationHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageInfoHolder{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):PageInfoWithPaginationHolder {
         val layoutInflater = LayoutInflater.from(ctx)
-        return PageInfoHolder(
+        return PageInfoWithPaginationHolder(
             layoutInflater.inflate(
                 R.layout.item_page,
                 parent,
@@ -40,7 +40,7 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
     }
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat", "NotifyDataSetChanged")
-    override fun onBindViewHolder(holder: PageInfoHolder, position: Int) {
+    override fun onBindViewHolder(holder: PageInfoWithPaginationHolder, position: Int) {
         val pageData = pageDataList?.get(position)
         if (pageData != null) {
             val dateFormat = SimpleDateFormat("dd-MM-yyyy")
@@ -53,7 +53,6 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
             holder.tvTitle.text = "Title:" + " " + pageData.title
             holder.tvUrl.text = pageData.url
             val mActionBar = (ctx as AppCompatActivity).supportActionBar
-            mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
             holder.switchSelect.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     ApiCallSimpleActivity.selectedCount += 1
@@ -65,7 +64,6 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
                     notifyDataSetChanged()
                 }
             }
-
         }
     }
 
@@ -73,7 +71,7 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
         return pageDataList?.size!!
     }
 
-    class PageInfoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PageInfoWithPaginationHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvCratedDate: MaterialTextView = itemView.tvCreatedDate
         val tvTitle: MaterialTextView = itemView.tvTitle
         val tvUrl: MaterialTextView = itemView.tvUrl

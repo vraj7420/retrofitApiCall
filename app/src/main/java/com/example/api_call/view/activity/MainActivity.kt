@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         }
         btnApiFetchingUsingPaging.setOnClickListener {
-            val intentApiCallPagination=Intent(this, ApiCallWithPagination::class.java)
+            val intentApiCallPagination=Intent(this, ApiCallWithPaginationActivity::class.java)
             startActivity(intentApiCallPagination)
         }
     }
