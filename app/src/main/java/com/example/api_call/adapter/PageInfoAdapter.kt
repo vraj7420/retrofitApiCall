@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.api_call.R
 import com.example.api_call.model.PageModel
@@ -58,11 +59,13 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
                 if (isChecked) {
                     pageData.isSelected=true
                     ApiCallSimpleActivity.selectedCount += 1
+                    holder.cvBackgroundPageData.setBackgroundResource(R.drawable.selected_item_card_view_background)
                     mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
                     notifyDataSetChanged()
                 } else {
                     pageData.isSelected=false
                     ApiCallSimpleActivity.selectedCount -= 1
+                    holder.cvBackgroundPageData.setBackgroundResource(R.drawable.unselected_card_view_background)
                     mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
                     notifyDataSetChanged()
                 }
@@ -90,5 +93,7 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
         val tvTitle: MaterialTextView = itemView.tvTitle
         val tvUrl: MaterialTextView = itemView.tvUrl
         val switchSelect: SwitchMaterial = itemView.switchSelect
+        val cvBackgroundPageData: CardView = itemView.cvBackgroundPageData
+
     }
 }

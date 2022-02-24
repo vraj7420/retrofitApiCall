@@ -17,12 +17,11 @@
         android:text="@string/simple_api_call_page_fetching"
         android:textAllCaps="false"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/btnApiFetchingUsingPaging"
+        app:layout_constraintBottom_toTopOf="@id/btnApiFetchingUsingPaging"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnApiFetchingUsingPaging"
@@ -32,12 +31,11 @@
         android:gravity="center"
         android:text="@string/api_call_with_pagination"
         android:textAllCaps="false"
+        android:layout_marginTop="20dp"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSimpleApiFetching" />
-
+        app:layout_constraintTop_toBottomOf="@id/btnSimpleApiFetching" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

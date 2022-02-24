@@ -11,7 +11,6 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.api_call.network.ApiInterface
 import com.example.api_call.R
 import com.example.api_call.adapter.PageInfoAdapter
 import com.example.api_call.model.PageList
@@ -24,8 +23,6 @@ import kotlinx.android.synthetic.main.activity_api_call_with_pagination.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiCallSimpleActivity : AppCompatActivity() {
     companion object {
@@ -80,11 +77,6 @@ class ApiCallSimpleActivity : AppCompatActivity() {
     private fun getPageData() {
         tvError.visibility = View.GONE
         pbWaiting.visibility = View.VISIBLE
-        val retrofitBuilder = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://hn.algolia.com/api/v1/")
-            .build()
-            .create(ApiInterface::class.java)
         BaseService().getBaseApi().getData("story",tetPageNumber.text.toString()).enqueue(object : Callback<PageList?> {
             @SuppressLint("NotifyDataSetChanged")
             override fun onResponse(call: Call<PageList?>, response: Response<PageList?>) {

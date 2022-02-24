@@ -60,6 +60,7 @@ class ApiCallWithPaginationActivity : AppCompatActivity() {
             if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
                 if (checkForInternet(this)) {
                     page++
+
                     pbWaiting.visibility = View.VISIBLE
                     getPageData(page, pageLimit)
                 } else {
@@ -69,12 +70,13 @@ class ApiCallWithPaginationActivity : AppCompatActivity() {
             }
         })
         swipe.setOnRefreshListener {
+            page=0
+            pageDataList.clear()
+            rvPageData.adapter=null
+            setAdapter()
+            pageInfoAdapter.notifyDataSetChanged()
             swipe.visibility = View.GONE
             if (checkForInternet(this)) {
-                page=0
-                selectedCount=0
-                pageDataList.clear()
-                pageInfoAdapter.notifyDataSetChanged()
                 swipe.visibility = View.VISIBLE
                 pbWaiting.visibility = View.VISIBLE
                 getPageData(page,pageLimit)
@@ -85,7 +87,6 @@ class ApiCallWithPaginationActivity : AppCompatActivity() {
                 tvError.text = getString(R.string.no_internet_error)
             }
         }
-
     }
 
     override fun onResume() {
@@ -106,6 +107,7 @@ class ApiCallWithPaginationActivity : AppCompatActivity() {
                 val pageBody = response.body()
                 if (pageBody?.pageList?.isEmpty() == true) {
                     pbWaiting.visibility = View.GONE
+                    selectedCount=0
                     tvError.visibility = View.VISIBLE
                     tvError.text = getString(R.string.page_empty)
                 } else {
@@ -125,6 +127,7 @@ class ApiCallWithPaginationActivity : AppCompatActivity() {
     }
 
     private fun setAdapter() {
+        selectedCount=0
         val actionBar: ActionBar? = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.title = selectedCount.toString()
