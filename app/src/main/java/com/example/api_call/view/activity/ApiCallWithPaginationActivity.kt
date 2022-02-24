@@ -12,13 +12,11 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.api_call.ApiInterface
 import com.example.api_call.R
-import com.example.api_call.adapter.PageInfoAdapter
 import com.example.api_call.adapter.PageInfoWithPaginationAdapter
 import com.example.api_call.model.PageList
 import com.example.api_call.model.PageModel
-import kotlinx.android.synthetic.main.activity_api_call_simple.*
+import com.example.api_call.network.BaseService
 import kotlinx.android.synthetic.main.activity_api_call_with_pagination.*
 import kotlinx.android.synthetic.main.activity_api_call_with_pagination.pbWaiting
 import kotlinx.android.synthetic.main.activity_api_call_with_pagination.rvPageData
@@ -26,8 +24,6 @@ import kotlinx.android.synthetic.main.activity_api_call_with_pagination.tvError
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class ApiCallWithPaginationActivity : AppCompatActivity() {
@@ -36,7 +32,7 @@ class ApiCallWithPaginationActivity : AppCompatActivity() {
     }
 
     private var page = 1
-    private val pageLimit = 100
+    private val pageLimit = 50
     private val pageDataList = ArrayList<PageModel>()
     val pageInfoAdapter = PageInfoWithPaginationAdapter(this@ApiCallWithPaginationActivity, pageDataList)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +40,7 @@ class ApiCallWithPaginationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_api_call_with_pagination)
         setListener()
         setAdapter()
+
     }
 
     private fun init() {
@@ -54,8 +51,10 @@ class ApiCallWithPaginationActivity : AppCompatActivity() {
             tvError.visibility = View.VISIBLE
             tvError.text = getString(R.string.no_internet_error)
         }
+
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setListener() {
         nsv.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
             if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
@@ -69,6 +68,23 @@ class ApiCallWithPaginationActivity : AppCompatActivity() {
                 }
             }
         })
+        swipe.setOnRefreshListener {
+            swipe.visibility = View.GONE
+            if (checkForInternet(this)) {
+                page=0
+                selectedCount=0
+                pageDataList.clear()
+                pageInfoAdapter.notifyDataSetChanged()
+                swipe.visibility = View.VISIBLE
+                pbWaiting.visibility = View.VISIBLE
+                getPageData(page,pageLimit)
+                swipe.isRefreshing = false
+            } else {
+                swipe.visibility = View.GONE
+                tvError.visibility = View.VISIBLE
+                tvError.text = getString(R.string.no_internet_error)
+            }
+        }
 
     }
 
@@ -84,13 +100,7 @@ class ApiCallWithPaginationActivity : AppCompatActivity() {
 
         }
         pbWaiting.visibility = View.VISIBLE
-        val retrofitBuilder = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://hn.algolia.com/api/v1/")
-            .build()
-            .create(ApiInterface::class.java)
-        val pageData = retrofitBuilder.getData("story", page.toString())
-        pageData.enqueue(object : Callback<PageList?> {
+        BaseService().getBaseApi().getData("story",page.toString()).enqueue(object : Callback<PageList?> {
             @SuppressLint("NotifyDataSetChanged")
             override fun onResponse(call: Call<PageList?>, response: Response<PageList?>) {
                 val pageBody = response.body()

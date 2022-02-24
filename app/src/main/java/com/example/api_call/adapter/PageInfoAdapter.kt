@@ -56,16 +56,28 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
             mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
             holder.switchSelect.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
+                    pageData.isSelected=true
                     ApiCallSimpleActivity.selectedCount += 1
                     mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
                     notifyDataSetChanged()
                 } else {
+                    pageData.isSelected=false
                     ApiCallSimpleActivity.selectedCount -= 1
                     mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
                     notifyDataSetChanged()
                 }
             }
+            holder.itemView.setOnClickListener {
+                pageData.setSelectItem(!pageData.isSelected)
+                if(pageData.isSelected){
+                    holder.switchSelect.isChecked=true
+                    mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
+                } else{
+                    holder.switchSelect.isChecked=false
+                    mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
+                }
 
+            }
         }
     }
 

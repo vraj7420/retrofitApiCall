@@ -11,11 +11,16 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.api_call.ApiInterface
+import com.example.api_call.network.ApiInterface
 import com.example.api_call.R
 import com.example.api_call.adapter.PageInfoAdapter
 import com.example.api_call.model.PageList
+import com.example.api_call.network.BaseService
 import kotlinx.android.synthetic.main.activity_api_call_simple.*
+import kotlinx.android.synthetic.main.activity_api_call_simple.pbWaiting
+import kotlinx.android.synthetic.main.activity_api_call_simple.rvPageData
+import kotlinx.android.synthetic.main.activity_api_call_simple.tvError
+import kotlinx.android.synthetic.main.activity_api_call_with_pagination.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -80,8 +85,7 @@ class ApiCallSimpleActivity : AppCompatActivity() {
             .baseUrl("https://hn.algolia.com/api/v1/")
             .build()
             .create(ApiInterface::class.java)
-        val pageData = retrofitBuilder.getData("story", tetPageNumber.text.toString())
-        pageData.enqueue(object : Callback<PageList?> {
+        BaseService().getBaseApi().getData("story",tetPageNumber.text.toString()).enqueue(object : Callback<PageList?> {
             @SuppressLint("NotifyDataSetChanged")
             override fun onResponse(call: Call<PageList?>, response: Response<PageList?>) {
                 val pageBody = response.body()

@@ -1,4 +1,4 @@
-package com.example.api_call
+package com.example.api_call.network
 
 import com.example.api_call.model.PageList
 import retrofit2.Call

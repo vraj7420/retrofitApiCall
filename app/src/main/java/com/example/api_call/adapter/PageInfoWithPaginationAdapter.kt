@@ -50,19 +50,32 @@ class PageInfoWithPaginationAdapter(private var ctx: Context, private var pageDa
             } catch (e: ParseException) {
                 e.printStackTrace()
             }
+            val mActionBar = (ctx as AppCompatActivity).supportActionBar
             holder.tvTitle.text = "Title:" + " " + pageData.title
             holder.tvUrl.text = pageData.url
-            val mActionBar = (ctx as AppCompatActivity).supportActionBar
             holder.switchSelect.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     ApiCallSimpleActivity.selectedCount += 1
+                    pageData.isSelected=true
                     mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
                     notifyDataSetChanged()
                 } else {
+                    pageData.isSelected=false
                     ApiCallSimpleActivity.selectedCount -= 1
                     mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
                     notifyDataSetChanged()
                 }
+            }
+            holder.itemView.setOnClickListener {
+                pageData.setSelectItem(!pageData.isSelected)
+                if(pageData.isSelected){
+                    holder.switchSelect.isChecked=true
+                    mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
+                } else{
+                    holder.switchSelect.isChecked=false
+                    mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
+                }
+
             }
         }
     }
