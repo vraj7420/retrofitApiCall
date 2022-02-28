@@ -23,5 +23,13 @@ class MainActivity : AppCompatActivity() {
             val intentApiCallPagination=Intent(this, ApiCallWithPaginationActivity::class.java)
             startActivity(intentApiCallPagination)
         }
+        btnApiCallWithJson.setOnClickListener {
+            val intentApiCallJson=Intent(this, ApiCallWithJsonActivity::class.java)
+            startActivity(intentApiCallJson)
+        }
+        btnApiWithMultipart.setOnClickListener {
+            val intentApiCallWithMultipart=Intent(this, ApiCallWithMultipartActivity::class.java)
+            startActivity(intentApiCallWithMultipart)
+        }
     }
 }

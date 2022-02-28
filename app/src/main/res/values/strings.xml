@@ -14,4 +14,13 @@
     <string name="error">Error</string>
     <string name="page_empty">Page is Empty</string>
     <string name="no_internet_error">Oops ! No Internet Please Turn on Internet  For Fetch Data</string>
+    <string name="api_call_with_json">Api call with Json</string>
+    <string name="api_call_with_multipart">Api Call with Multipart</string>
+    <string name="enter_title_of_book">Enter Title Of Book</string>
+    <string name="enter_url_of_book">Enter Url of book</string>
+    <string name="todo">TODO</string>
+    <string name="post">Post</string>
+    <string name="created_at_">Created At:</string>
+    <string name="select_image">Select Image</string>
+    <string name="upload_image">Upload Image</string>
 </resources>

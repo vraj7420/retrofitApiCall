@@ -1,7 +1,6 @@
 package com.example.api_call.network
 
 import com.example.api_call.BuildConfig
-//import com.example.demopaging.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,11 +11,17 @@ import java.util.concurrent.TimeUnit
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class BaseService() {
+class BaseService {
     private var retrofitBaseApi: Retrofit? = null
 
     fun getBaseApi(): ApiInterface {
         return createRetrofitBase().create(ApiInterface::class.java)
+    }
+    fun postBaseApi(): ApiPostApiInterface {
+        return createRetrofitBase().create(ApiPostApiInterface::class.java)
+    }
+    fun postImageBaseApi(): ApiMultiPartImageUploading {
+        return createRetrofitBase().create(ApiMultiPartImageUploading::class.java)
     }
     private fun createRetrofitBase(): Retrofit {
         if (retrofitBaseApi == null) {
