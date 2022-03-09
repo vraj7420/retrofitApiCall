@@ -27,9 +27,7 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
             layoutInflater.inflate(
                 R.layout.item_page,
                 parent,
-                false
-            )
-        )
+                false))
     }
 
     override fun getItemId(position: Int): Long {
@@ -79,7 +77,6 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
                     holder.switchSelect.isChecked=false
                     mActionBar?.title = ApiCallSimpleActivity.selectedCount.toString()
                 }
-
             }
         }
     }
@@ -94,6 +91,5 @@ class PageInfoAdapter(private var ctx: Context, private var pageDataList: ArrayL
         val tvUrl: MaterialTextView = itemView.tvUrl
         val switchSelect: SwitchMaterial = itemView.switchSelect
         val cvBackgroundPageData: CardView = itemView.cvBackgroundPageData
-
     }
 }

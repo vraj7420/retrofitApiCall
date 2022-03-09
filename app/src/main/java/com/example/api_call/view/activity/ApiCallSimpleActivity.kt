@@ -99,7 +99,6 @@ class ApiCallSimpleActivity : AppCompatActivity() {
                     selectedCount = 0
                 }
             }
-
             override fun onFailure(call: Call<PageList?>, t: Throwable) {
                 pbWaiting.visibility = View.GONE
                 swipeRefreshPageData.visibility = View.GONE
@@ -111,9 +110,7 @@ class ApiCallSimpleActivity : AppCompatActivity() {
 
 
     private fun checkForInternet(context: Context): Boolean {
-
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val network = connectivityManager.activeNetwork ?: return false
             val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false

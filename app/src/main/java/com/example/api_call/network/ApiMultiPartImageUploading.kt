@@ -9,9 +9,6 @@ import retrofit2.http.Part
 
 interface ApiMultiPartImageUploading {
     @Multipart
-    @POST("search_by_date")
-    fun uploadImage(
-        @Part file: MultipartBody.Part,
-        @Part("filename") name: RequestBody
-    ): Call<String>
+    @POST("search_by_date?New")
+    fun uploadImage(@Part file: MultipartBody.Part, @Part("filename") name: RequestBody): Call<String>
 }
